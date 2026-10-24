@@ -42,7 +42,13 @@ public class MainGameDebugger : MonoBehaviour
 
         GUILayout.Space(8);
 
-        if (GUILayout.Button("ステージ開始/再開始"))
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("-")) stageIndexToStart = Mathf.Max(0, stageIndexToStart - 1);
+        GUILayout.Label($"Stage Index: {stageIndexToStart}", GUILayout.Width(110));
+        if (GUILayout.Button("+")) stageIndexToStart++;
+        GUILayout.EndHorizontal();
+
+        if (GUILayout.Button("選択したステージを開始 / 再開始"))
         {
             mainGame.SelectStage(stageIndexToStart);
         }
