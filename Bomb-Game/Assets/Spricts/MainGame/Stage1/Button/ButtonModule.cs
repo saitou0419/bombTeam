@@ -14,7 +14,7 @@ public class ButtonModule : MonoBehaviour
     [SerializeField] private ModuleButton[] buttons;
 
     [Header("初期配置のランダム設定")]
-    [Tooltip("オンなら、リセットのたびに赤・緑をランダムに決める、オフなら各ボタンのInitialStateを使う")]
+    [Tooltip("オンならリセットのたびに赤・緑をランダムに決める、オフなら各ボタンのInitialStateを使う")]
     [SerializeField] private bool randomizeOnReset = true;
     [Tooltip("各ボタンが緑になる確率(0〜1) 仮の値であり正式仕様ではない")]
     [Range(0f, 1f)]
@@ -149,6 +149,6 @@ public class ButtonModule : MonoBehaviour
     {
         isCleared = true;
         onCleared?.Invoke();
-        mainGame.NotifyModuleCleard(ModuleId.Button);
+        mainGame.NotifyModuleCleared(ModuleId.Button);
     }
 }

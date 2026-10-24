@@ -177,7 +177,7 @@ public class MainGame : MonoBehaviour
     //モジュールからの通知
 
     ///<summary>モジュール解除通知</summary>
-    public void NotifyModuleCleard(ModuleId id)
+    public void NotifyModuleCleared(ModuleId id)
     {
         if (currentGameState != GameState.Playing) return;
 

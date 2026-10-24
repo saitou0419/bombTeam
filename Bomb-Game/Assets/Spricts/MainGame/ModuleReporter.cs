@@ -14,7 +14,7 @@ public class ModuleReporter : MonoBehaviour
     public void ReportCleared()
     {
         if (!CanReport()) return;
-        mainGame.NotifyModuleCleard(moduleId);
+        mainGame.NotifyModuleCleared(moduleId);
     }
 
     ///<summary>Œë‘€ì’Ê’m</summary>

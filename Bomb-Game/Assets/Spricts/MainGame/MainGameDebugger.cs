@@ -53,7 +53,7 @@ public class MainGameDebugger : MonoBehaviour
         {
             if (GUILayout.Button($"{id}‚ğ‰ğœ"))
             {
-                mainGame.NotifyModuleCleard(id);
+                mainGame.NotifyModuleCleared(id);
             }
         }
 
