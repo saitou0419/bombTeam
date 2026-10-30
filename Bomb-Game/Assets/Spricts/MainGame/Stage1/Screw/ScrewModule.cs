@@ -2,6 +2,16 @@
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+/// <summary>ネジを外すためにマウスを動かす方向。</summary>
+public enum ScrewRemoveDirection
+{
+    Left,
+    Right,
+    Up,
+    Down
+}
+
+
 /// <summary>
 /// ネジモジュール本体
 /// プラス/マイナスの切替と全ネジが外れたかの判定、MainGameへの解除通知を行う
@@ -21,8 +31,12 @@ public class ScrewModule : MonoBehaviour
     [SerializeField] private Graphic modeIndicator;
 
     [Header("ネジを外す動作")]
-    [Tooltip("左クリックを押す秒数(仮)")]
-    [SerializeField] private float holdSeconds = 1.0f;
+    [Tooltip("マウスを動かす方向")]
+    [SerializeField] private ScrewRemoveDirection removeDirection = ScrewRemoveDirection.Left;
+    [Tooltip("外れるまでに動かす距離")]
+    [SerializeField] private float dragDistance = 200f;
+    [Tooltip("外れる直前までにネジが回って見える角度")]
+    [SerializeField] private float visualRotationDegrees = 360f;
 
     [Header("初期配置のランダム設定")]
     [Tooltip("オンならリセットの度にプラス/マイナスをランダムに決める、オフなら書くネジのInitialTypeを使う")]
@@ -42,8 +56,24 @@ public class ScrewModule : MonoBehaviour
     private bool isCleared;
     private bool initialized;
 
-    public float HoldSeconds => Mathf.Max(0.01f, holdSeconds);
+    public float DragDistance => Mathf.Max(1f, dragDistance);
+    public float VisualRotationDegrees => visualRotationDegrees;
     public ScrewType CurrentMode => currentMode;
+
+    /// <summary>外す方向の単位ベクトル(画面座標)。</summary>
+    public Vector2 RemoveDirection
+    {
+        get
+        {
+            switch (removeDirection)
+            {
+                case ScrewRemoveDirection.Right: return Vector2.right;
+                case ScrewRemoveDirection.Up: return Vector2.up;
+                case ScrewRemoveDirection.Down: return Vector2.down;
+                default: return Vector2.left;
+            }
+        }
+    }
 
     private void Reset()
     {
