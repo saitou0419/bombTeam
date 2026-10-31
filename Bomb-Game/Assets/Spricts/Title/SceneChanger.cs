@@ -13,4 +13,9 @@ public class SceneChenger : MonoBehaviour
             SceneManager.LoadScene("StageSelect");
         }
     }
+
+    public void GoToStageSelect()
+    {
+        SceneManager.LoadScene("StageSelect");
+    }
 }
