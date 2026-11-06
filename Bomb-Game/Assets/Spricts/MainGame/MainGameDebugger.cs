@@ -33,6 +33,7 @@ public class MainGameDebugger : MonoBehaviour
         GUILayout.Label($"Time: {mainGame.RemainingTime:F1}");
         GUILayout.Label($"Cleard: {mainGame.ClearedModuleCount}/{mainGame.TotalModuleCount}");
         GUILayout.Label($"Score: {mainGame.CurrentStage}");
+        GUILayout.Label($"Mistakes: {mainGame.MistakeCount} / {mainGame.MaxMistakes}(残り {mainGame.RemainingMistakes})");
 
         if (mainGame.HasResult)
         {
@@ -64,6 +65,10 @@ public class MainGameDebugger : MonoBehaviour
         }
 
         GUILayout.Space(8);
+        if (GUILayout.Button("ミスを通知"))
+        {
+            mainGame.NotifyModuleMistake();
+        }
         if (GUILayout.Button("誤操作を通知"))
         {
             mainGame.NotifyModuleFailed();

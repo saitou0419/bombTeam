@@ -459,6 +459,7 @@ MonoBehaviour:
   visualRotationDegrees: 360
   randomizeOnReset: 1
   plusProbability: 0.5
+  wrongDriverIsMistake: 0
   plusColor: {r: 0.2, g: 0.5, b: 1, a: 1}
   minusColor: {r: 1, g: 0.95, b: 0.2, a: 1}
   onCleared:
@@ -769,6 +770,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 82bbdbe800d9e40489dce4539f68ac51, type: 2}
   - {fileID: 11400000, guid: 7eac7cddbe45a0c4383116333e85e8a8, type: 2}
   - {fileID: 11400000, guid: e4fd593f8f242374784f9cc4d0beb438, type: 2}
+  - {fileID: 11400000, guid: 7c586710786b9534f80ba0ec11c14deb, type: 2}
   autoStageOnPlay: 1
   autoStartStageIndex: 0
   initialScore: 0
@@ -830,6 +832,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onResultReady:
+    m_PersistentCalls:
+      m_Calls: []
+  onMistake:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &476581936
@@ -2293,7 +2298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f70febd8ae712c4087f95b5c8e5af02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WireModule
-  maingane: {fileID: 476581935}
+  mainGame: {fileID: 476581935}
   groups:
   - wires:
     - {fileID: 1383646735}
@@ -2321,6 +2326,7 @@ MonoBehaviour:
   - displayName: "\u6A59\u8272"
     color: {r: 1, g: 0.55, b: 0.1, a: 1}
   instructionFormat: "{0}\u3092\u5207\u308B"
+  wrongWireIsMistake: 1
   randomizeWireColors: 1
   onCleared:
     m_PersistentCalls:
@@ -3028,6 +3034,7 @@ MonoBehaviour:
   - {fileID: 1849605025}
   randomizeOnReset: 1
   greenProbability: 0.5
+  greenClickIsMistake: 0
   onCleared:
     m_PersistentCalls:
       m_Calls: []

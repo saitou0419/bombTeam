@@ -31,7 +31,7 @@ public class WireModule : MonoBehaviour
     }
 
     [Header("接続")]
-    [SerializeField] private MainGame maingane;
+    [SerializeField] private MainGame mainGame;
 
     [Header("配線グループ(一旦2グループ)")]
     [SerializeField] private WireGroup[] groups;
@@ -50,6 +50,10 @@ public class WireModule : MonoBehaviour
     [Header("指示文")]
     [Tooltip("{0}の部分に色の表示文が入る")]
     [SerializeField] private string instructionFormat = "{0}を切る";
+
+    [Header("ミスの扱い")]
+    [Tooltip("指示と違う色の配線を切ったとき、ミスとして数えるか")]
+    [SerializeField] private bool wrongWireIsMistake = true;
 
     [Header("配線の色のランダム設定")]
     [Tooltip("オンならリセットの度に各配線の色をランダムに決める、オフなら各配線のInitialColorIndexを使う")]
@@ -182,12 +186,12 @@ public class WireModule : MonoBehaviour
         if (isCleared || wire == null || wire.IsCut) return;
         
         //Playing中のみ受け付ける
-        if (maingane == null)
+        if (mainGame == null)
         {
             Debug.LogError("[WireModule] MainGameが未設定です");
             return;
         }
-        if (maingane.State != GameState.Playing) return;
+        if (mainGame.State != GameState.Playing) return;
 
         int g = wire.GroupIndex;
         if (groups == null || g < 0 || g >= groups.Length || groups[g] == null) return;
@@ -195,8 +199,12 @@ public class WireModule : MonoBehaviour
         WireGroup group = groups[g];
         if (group.isCleared) return; //解除済みグループの残りの配線は動かせない
 
-        //指示された色と違う配線は、今は何も起きない
-        if (wire.ColorIndex != group.currectColorIndex) return;
+        //配線間違えるとミス判定に
+        if (wire.ColorIndex != group.currectColorIndex)
+        {
+            if (wrongWireIsMistake) mainGame.NotifyModuleMistake();
+            return;
+        }
          
         wire.Cut();
         group.isCleared = true;
@@ -220,6 +228,6 @@ public class WireModule : MonoBehaviour
     {
         isCleared = true;
         onCleared?.Invoke();
-        maingane.NotifyModuleCleared(ModuleId.Wire);
+        mainGame.NotifyModuleCleared(ModuleId.Wire);
     }
 }

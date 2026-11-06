@@ -44,6 +44,9 @@ public class ScrewModule : MonoBehaviour
     [Tooltip("各ネジがプラスになる確率(0〜1) 仮の値であり正式仕様ではない")]
     [Range(0f, 1f)]
     [SerializeField] private float plusProbability = 0.5f;
+    [Header("ミスの扱い")]
+    [Tooltip("ドライバーと違う種類のネジを押したとき、ミスとして数えるか(未確定のため初期値はオフ)")]
+    [SerializeField] private bool wrongDriverIsMistake = false;
 
     [Header("見分け用の色(Sprite届くまでの仮)")]
     [SerializeField] private Color plusColor = new Color(0.2f, 0.5f, 1f);
@@ -165,6 +168,17 @@ public class ScrewModule : MonoBehaviour
 
         //ドライバーとネジが違うときは外せない(誤操作扱いではない)
         return screw.Type == currentMode;
+    }
+
+    ///<summary>ネジを押した瞬間ModuleScrewから呼ばれる 違うドライバーならミス</summary>
+    public void OnPresseWithWrongDriver(ModuleScrew screw)
+    {
+        if (!wrongDriverIsMistake) return;
+        if (isCleared || screw == null || screw.IsRemoved) return;
+        if (mainGame == null || mainGame.State != GameState.Playing) return;
+        if (screw.Type == currentMode) return;//ドライバーがあってるときはミスではない
+
+        mainGame.NotifyModuleMistake();
     }
 
     ///<summary>ModuleScrewからネジが外れた通知を受け取る</summary>
