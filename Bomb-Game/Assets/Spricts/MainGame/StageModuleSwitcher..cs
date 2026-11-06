@@ -1,49 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
-/// ステージ開始時に、そのステージで必要なモジュールだけを表示するスクリプト
-/// ・Stage Layouts に登録したステージ:そこに入れたオブジェクトだけを表示する(1-4用など)
-/// ・登録がないステージ:StageData の requiredModules に合うモジュールだけを表示する
-/// MainGame.onStageStarted に OnStageStarted を登録して使う
+/// ステージ開始時に、そのステージの StageRoot だけを表示するスクリプト
+/// シーン内のStageRootを自動で探すため、ステージを増やしても登録は不要
+/// MainGame.onStageStarted に OnStageStarted を登録して使う(この1行だけでよい)
 /// </summary>
 public class StageModuleSwitcher : MonoBehaviour
 {
-    [Serializable]
-    public class ModuleEntry
-    {
-        [Tooltip("このモジュールの種類")]
-        public ModuleId moduleId = ModuleId.None;
-        [Tooltip("そのモジュールの親 GameObject(ButtonModule などを付けたオブジェクト)")]
-        public GameObject root;
-    }
-
-    [Serializable]
-    public class StageLayout
-    {
-        [Tooltip("対象の StageData の Stage Id(例: 1-4)")]
-        public string stageId = "";
-        [Tooltip("このステージで表示するオブジェクト ここに入れたものだけが表示される")]
-        public GameObject[] roots;
-    }
-
-    [Header("標準のモジュール(1-1〜1-3など、requiredModulesで出し分けるもの)")]
-    [SerializeField] private ModuleEntry[] modules;
-
-    [Header("ステージ専用の表示(1-4など、専用のオブジェクトを使うステージ)")]
-    [SerializeField] private StageLayout[] stageLayouts;
-
     [Header("開始前の表示")]
-    [Tooltip("オンなら、ステージが始まるまでは全モジュールを隠す")]
+    [Tooltip("オンなら、ステージが始まるまでは全ステージの親を隠す")]
     [SerializeField] private bool hideAllUntilStageStarts = true;
+
+    private StageRoot[] roots;
 
     private void Awake()
     {
+        FindRoots();
         if (hideAllUntilStageStarts)
         {
-            ApplyVisible(new HashSet<GameObject>());
+            foreach (var r in roots)
+            {
+                if (r != null) r.gameObject.SetActive(false);
+            }
         }
+    }
+
+    private void FindRoots()
+    {
+        // 非表示のものも含めて探す
+        roots = FindObjectsByType<StageRoot>(FindObjectsInactive.Include, FindObjectsSortMode.None);
     }
 
     /// <summary>
@@ -53,96 +38,51 @@ public class StageModuleSwitcher : MonoBehaviour
     {
         if (stage == null)
         {
-            Debug.LogError("[StageModuleSwitcher] StageData が null です。");
+            Debug.LogError("[StageModuleSwitcher] StageDataがnullです");
             return;
         }
+        if (roots == null) FindRoots();
 
-        var toShow = new HashSet<GameObject>();
-        StageLayout layout = FindLayout(stage.stageId);
-
-        if (layout != null)
+        // Stage Id が一致する StageRoot を探す
+        StageRoot target = null;
+        foreach (var r in roots)
         {
-            // ステージ専用の表示:登録されたオブジェクトだけを出す
-            if (layout.roots == null || layout.roots.Length == 0)
+            if (r == null || !r.Matches(stage.stageId)) continue;
+
+            if (target == null)
             {
-                Debug.LogWarning($"[StageModuleSwitcher] ステージ '{stage.stageId}' の Roots が空です。何も表示されません。");
+                target = r;
             }
             else
             {
-                foreach (var go in layout.roots)
-                {
-                    if (go != null) toShow.Add(go);
-                }
+                Debug.LogWarning($"[StageModuleSwitcher] Stage Id'{stage.stageId}'のStageRootが複数あります({r.name}) 最初の1つだけ使います");
             }
         }
-        else
-        {
-            // 標準:requiredModules に入っているモジュールだけを出す
-            var required = new HashSet<ModuleId>(stage.requiredModules);
-            var registered = new HashSet<ModuleId>();
 
-            if (modules != null)
+        // 一致したものだけ表示し、それ以外は隠す
+        foreach (var r in roots)
+        {
+            if (r != null) r.gameObject.SetActive(r == target);
+        }
+
+        if (target == null)
+        {
+            Debug.LogWarning($"[StageModuleSwitcher] Stage Id'{stage.stageId}'に合う StageRoot がありません 何も表示されません");
+            return;
+        }
+
+        // 表示した後に、子のモジュールを初期化する
+        target.Setup(stage);
+
+        // StageData が要求するモジュールが、この親の中に揃っているか確認する
+        var provided = target.GetProvidedModules();
+        foreach (var id in stage.requiredModules)
+        {
+            if (id == ModuleId.None) continue;
+            if (!provided.Contains(id))
             {
-                foreach (var entry in modules)
-                {
-                    if (entry == null || entry.root == null) continue;
-
-                    registered.Add(entry.moduleId);
-                    if (required.Contains(entry.moduleId)) toShow.Add(entry.root);
-                }
+                Debug.LogWarning($"[StageModuleSwitcher] ステージ'{stage.stageId}'に必要な{id}が、StageRoot'{target.name}'の中にありません クリアできません");
             }
-
-            foreach (var id in required)
-            {
-                if (id == ModuleId.None) continue;
-                if (!registered.Contains(id))
-                {
-                    Debug.LogWarning($"[StageModuleSwitcher] ステージ '{stage.stageId}' に必要な {id} が modules に登録されていません。");
-                }
-            }
-        }
-
-        ApplyVisible(toShow);
-    }
-
-    private StageLayout FindLayout(string stageId)
-    {
-        if (stageLayouts == null) return null;
-        foreach (var layout in stageLayouts)
-        {
-            if (layout != null && layout.stageId == stageId) return layout;
-        }
-        return null;
-    }
-
-    /// <summary>管理対象のオブジェクトのうち、toShow に入っているものだけを表示する</summary>
-    private void ApplyVisible(HashSet<GameObject> toShow)
-    {
-        var all = new HashSet<GameObject>();
-
-        if (modules != null)
-        {
-            foreach (var entry in modules)
-            {
-                if (entry != null && entry.root != null) all.Add(entry.root);
-            }
-        }
-        if (stageLayouts != null)
-        {
-            foreach (var layout in stageLayouts)
-            {
-                if (layout == null || layout.roots == null) continue;
-                foreach (var go in layout.roots)
-                {
-                    if (go != null) all.Add(go);
-                }
-            }
-        }
-
-        foreach (var go in all)
-        {
-            bool want = toShow.Contains(go);
-            if (go.activeSelf != want) go.SetActive(want);
         }
     }
 }
