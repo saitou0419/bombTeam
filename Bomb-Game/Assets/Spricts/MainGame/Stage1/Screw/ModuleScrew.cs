@@ -90,6 +90,8 @@ public class ModuleScrew : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         isPressing = true;
         dragOrigin = eventData.position;
         SetProgress(0f);
+
+        if (owner != null) owner.OnPresseWithWrongDriver(this);
     }
 
     public void OnDrag(PointerEventData eventData)

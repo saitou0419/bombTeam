@@ -29,6 +29,7 @@ public class MainGame : MonoBehaviour
     public UnityEvent onStageCleared;
     public UnityEvent onStageFailed;
     public UnityEvent<ResultData> onResultReady;
+    public UnityEvent<int> onMistake;
 
     ///<summary>内部データ ResetStageで初期化</summary>
     private StageData currentStage;
@@ -36,6 +37,8 @@ public class MainGame : MonoBehaviour
     private float remainingTIme;
     private int totalModuleCount;
     private int currentScore;
+    private int mistakeCount;
+    private int maxMistakes;
     private ResultData resultData;
     private bool hasResult;
 
@@ -49,6 +52,9 @@ public class MainGame : MonoBehaviour
     public int ClearedModuleCount => clearedModules.Count;
     public int TotalModuleCount => totalModuleCount;
     public int CurrentScore => currentScore;
+    public int MistakeCount => mistakeCount;
+    public int MaxMistakes => maxMistakes;
+    public int RemainingMistakes => Mathf.Max(0, maxMistakes - mistakeCount);
     public bool HasResult => hasResult;
     public ResultData Result => resultData;
     public IReadOnlyCollection<ModuleId> RequiredModules => requiredModules;
@@ -138,6 +144,11 @@ public class MainGame : MonoBehaviour
             Debug.LogError($"[MainGame] ステージ'{stage.stageId}'のrequiredModules が空です");
             return false;
         }
+        if (stage.maxMistakes < 0)
+        {
+            Debug.LogError($"[MainGame] ステージ'{stage.stageId}'のmaxMistakeが負の値です");
+            return false;
+        }
         return true;
     }
 
@@ -145,6 +156,8 @@ public class MainGame : MonoBehaviour
     private void InitializeStage(StageData stage)
     {
         remainingTIme = stage.timeLimit;
+        maxMistakes = stage.maxMistakes;
+        mistakeCount = 0;
         currentScore = initialScore;
 
         requiredModules.Clear();
@@ -200,6 +213,20 @@ public class MainGame : MonoBehaviour
     {
         if (currentGameState != GameState.Playing) return;
         HandleStageFailure();
+    }
+
+    /// <summary>ミスの通知 </summary>
+    public void NotifyModuleMistake()
+    {
+        if (currentGameState != GameState.Playing) return ;
+
+        mistakeCount++;
+        onMistake?.Invoke(mistakeCount);
+
+        if (mistakeCount > maxMistakes)
+        {
+            HandleStageFailure();
+        }
     }
 
     private bool CheakAllModulesCleared()
@@ -269,6 +296,8 @@ public class MainGame : MonoBehaviour
         ResultHolder.Clear();
         currentStage = null;
         currentGameState = GameState.Ready;
+        mistakeCount = 0;
+        maxMistakes = 0;
     }
 
     private void SetState(GameState next)

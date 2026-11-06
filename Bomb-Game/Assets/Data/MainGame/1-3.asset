@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StageData
   stageId: 1-3
   timeLimit: 30
-  requiredModules: 02000000
+  maxMistakes: 5
+  requiredModules: 03000000

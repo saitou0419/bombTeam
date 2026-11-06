@@ -19,6 +19,9 @@ public class ButtonModule : MonoBehaviour
     [Tooltip("各ボタンが緑になる確率(0〜1) 仮の値であり正式仕様ではない")]
     [Range(0f, 1f)]
     [SerializeField] private float greenProbability = 0.5f;
+        [Header("ミスの扱い")]
+    [Tooltip("緑のボタンをクリックしたとき、ミスとして数えるか(未確定のため初期値はオフ)")]
+    [SerializeField] private bool greenClickIsMistake = false;
 
     [Header("演出用イベント(音やエフェクト用、任意)")]
     public UnityEvent onCleared;
@@ -123,10 +126,11 @@ public class ButtonModule : MonoBehaviour
         }
         if (mainGame.State != GameState.Playing) return;
 
-        if (clicked.IsGreen) return;
-
-        //緑ボタンは一回放置
-        if (clicked.IsGreen) return;
+        if (clicked.IsGreen)
+        {
+            if (greenClickIsMistake) mainGame.NotifyModuleMistake();
+            return;
+        }
 
         clicked.SetState(ButtonColorState.Green);
         

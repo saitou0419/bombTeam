@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 配線一本のみ
-/// 色の保持・表示・左クリックの検出、切断を担当
+/// 色の保持・表示・右クリックの検出、切断を担当
 /// 正解かどうかはWireModuleで
 /// </summary>
 public class ModuleWire : MonoBehaviour, IPointerClickHandler
@@ -70,7 +70,7 @@ public class ModuleWire : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         // 左クリックのみ
-        if (eventData.button != PointerEventData.InputButton.Left) return;
+        if (eventData.button != PointerEventData.InputButton.Right) return;
         if (IsCut || owner == null) return;
 
         owner.OnWireClicked(this);
