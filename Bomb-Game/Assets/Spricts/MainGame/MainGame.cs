@@ -223,7 +223,7 @@ public class MainGame : MonoBehaviour
         mistakeCount++;
         onMistake?.Invoke(mistakeCount);
 
-        if (mistakeCount > maxMistakes)
+        if (mistakeCount >= maxMistakes)
         {
             HandleStageFailure();
         }
