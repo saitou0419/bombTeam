@@ -202,8 +202,9 @@ public class WireModule : MonoBehaviour
         //配線間違えるとミス判定に
         if (wire.ColorIndex != group.currectColorIndex)
         {
+            wire.Cut();   // ハズレの配線も切れる
             if (wrongWireIsMistake) mainGame.NotifyModuleMistake();
-            return;
+            return;       // グループは解除済みにならない
         }
          
         wire.Cut();

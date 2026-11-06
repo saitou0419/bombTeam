@@ -1,84 +1,148 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ƒXƒe[ƒWŠJn‚É‚»‚ÌƒXƒe[ƒW‚Å•K—v‚Èƒ‚ƒWƒ…[ƒ‹‚¾‚¯‚ğ•\¦‚·‚éƒXƒNƒŠƒvƒg
-/// StageData‚ÌrequiredModules‚É“ü‚Á‚Ä‚éƒ‚ƒWƒ…[ƒ‹‚ÌGameObject‚ğ—LŒø‚É‚µA“ü‚Á‚Ä‚¢‚È‚¢‚à‚Ì‚Í–³Œø‚É‚·‚é
-/// MainGame.onStageStarted‚ÉOnStageStarted‚ğ“o˜^‚µ‚Äg‚¤
+/// ã‚¹ãƒ†ãƒ¼ã‚¸é–‹å§‹æ™‚ã«ã€ãã®ã‚¹ãƒ†ãƒ¼ã‚¸ã§å¿…è¦ãªãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã ã‘ã‚’è¡¨ç¤ºã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+/// ãƒ»Stage Layouts ã«ç™»éŒ²ã—ãŸã‚¹ãƒ†ãƒ¼ã‚¸:ãã“ã«å…¥ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã ã‘ã‚’è¡¨ç¤ºã™ã‚‹(1-4ç”¨ãªã©)
+/// ãƒ»ç™»éŒ²ãŒãªã„ã‚¹ãƒ†ãƒ¼ã‚¸:StageData ã® requiredModules ã«åˆã†ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã ã‘ã‚’è¡¨ç¤ºã™ã‚‹
+/// MainGame.onStageStarted ã« OnStageStarted ã‚’ç™»éŒ²ã—ã¦ä½¿ã†
 /// </summary>
 public class StageModuleSwitcher : MonoBehaviour
 {
     [Serializable]
     public class ModuleEntry
     {
-        [Tooltip("‚±‚Ìƒ‚ƒWƒ…[ƒ‹‚Ìí—Ş")]
+        [Tooltip("ã“ã®ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ç¨®é¡")]
         public ModuleId moduleId = ModuleId.None;
-        [Tooltip("‚»‚Ìƒ‚ƒWƒ…[ƒ‹‚Ìe GameObject(ButtonModule ‚È‚Ç‚ğ•t‚¯‚½ƒIƒuƒWƒFƒNƒg)")]
+        [Tooltip("ãã®ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®è¦ª GameObject(ButtonModule ãªã©ã‚’ä»˜ã‘ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ)")]
         public GameObject root;
     }
 
-    [Header("ƒ‚ƒWƒ…[ƒ‹‚Ì“o˜^")]
+    [Serializable]
+    public class StageLayout
+    {
+        [Tooltip("å¯¾è±¡ã® StageData ã® Stage Id(ä¾‹: 1-4)")]
+        public string stageId = "";
+        [Tooltip("ã“ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã§è¡¨ç¤ºã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ ã“ã“ã«å…¥ã‚ŒãŸã‚‚ã®ã ã‘ãŒè¡¨ç¤ºã•ã‚Œã‚‹")]
+        public GameObject[] roots;
+    }
+
+    [Header("æ¨™æº–ã®ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«(1-1ã€œ1-3ãªã©ã€requiredModulesã§å‡ºã—åˆ†ã‘ã‚‹ã‚‚ã®)")]
     [SerializeField] private ModuleEntry[] modules;
 
-    [Header("ŠJn‘O‚Ì•\¦")]
-    [Tooltip("ƒIƒ“‚È‚çAƒXƒe[ƒW‚ªn‚Ü‚é‚Ü‚Å‚Í‘Sƒ‚ƒWƒ…[ƒ‹‚ğ‰B‚·")]
+    [Header("ã‚¹ãƒ†ãƒ¼ã‚¸å°‚ç”¨ã®è¡¨ç¤º(1-4ãªã©ã€å°‚ç”¨ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½¿ã†ã‚¹ãƒ†ãƒ¼ã‚¸)")]
+    [SerializeField] private StageLayout[] stageLayouts;
+
+    [Header("é–‹å§‹å‰ã®è¡¨ç¤º")]
+    [Tooltip("ã‚ªãƒ³ãªã‚‰ã€ã‚¹ãƒ†ãƒ¼ã‚¸ãŒå§‹ã¾ã‚‹ã¾ã§ã¯å…¨ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’éš ã™")]
     [SerializeField] private bool hideAllUntilStageStarts = true;
 
     private void Awake()
     {
         if (hideAllUntilStageStarts)
         {
-            SetAllActive(false);
+            ApplyVisible(new HashSet<GameObject>());
         }
     }
 
     /// <summary>
-    /// MainGame.onStageStarted‚©‚çŒÄ‚Ô
+    /// MainGame.onStageStarted ã‹ã‚‰å‘¼ã¶(StageDataå¼•æ•°ã¯Inspectorã®å‹•çš„ãƒã‚¤ãƒ³ãƒ‰ç”¨)
     /// </summary>
     public void OnStageStarted(StageData stage)
     {
         if (stage == null)
         {
-            Debug.LogError("[StageModuleSwitcher] StageData ‚ª null ‚Å‚·B");
+            Debug.LogError("[StageModuleSwitcher] StageData ãŒ null ã§ã™ã€‚");
             return;
         }
 
-        var required = new HashSet<ModuleId>(stage.requiredModules);
+        var toShow = new HashSet<GameObject>();
+        StageLayout layout = FindLayout(stage.stageId);
 
-        // •K—v‚Èƒ‚ƒWƒ…[ƒ‹‚¾‚¯•\¦
-        var registered = new HashSet<ModuleId>();
+        if (layout != null)
+        {
+            // ã‚¹ãƒ†ãƒ¼ã‚¸å°‚ç”¨ã®è¡¨ç¤º:ç™»éŒ²ã•ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã ã‘ã‚’å‡ºã™
+            if (layout.roots == null || layout.roots.Length == 0)
+            {
+                Debug.LogWarning($"[StageModuleSwitcher] ã‚¹ãƒ†ãƒ¼ã‚¸ '{stage.stageId}' ã® Roots ãŒç©ºã§ã™ã€‚ä½•ã‚‚è¡¨ç¤ºã•ã‚Œã¾ã›ã‚“ã€‚");
+            }
+            else
+            {
+                foreach (var go in layout.roots)
+                {
+                    if (go != null) toShow.Add(go);
+                }
+            }
+        }
+        else
+        {
+            // æ¨™æº–:requiredModules ã«å…¥ã£ã¦ã„ã‚‹ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã ã‘ã‚’å‡ºã™
+            var required = new HashSet<ModuleId>(stage.requiredModules);
+            var registered = new HashSet<ModuleId>();
+
+            if (modules != null)
+            {
+                foreach (var entry in modules)
+                {
+                    if (entry == null || entry.root == null) continue;
+
+                    registered.Add(entry.moduleId);
+                    if (required.Contains(entry.moduleId)) toShow.Add(entry.root);
+                }
+            }
+
+            foreach (var id in required)
+            {
+                if (id == ModuleId.None) continue;
+                if (!registered.Contains(id))
+                {
+                    Debug.LogWarning($"[StageModuleSwitcher] ã‚¹ãƒ†ãƒ¼ã‚¸ '{stage.stageId}' ã«å¿…è¦ãª {id} ãŒ modules ã«ç™»éŒ²ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚");
+                }
+            }
+        }
+
+        ApplyVisible(toShow);
+    }
+
+    private StageLayout FindLayout(string stageId)
+    {
+        if (stageLayouts == null) return null;
+        foreach (var layout in stageLayouts)
+        {
+            if (layout != null && layout.stageId == stageId) return layout;
+        }
+        return null;
+    }
+
+    /// <summary>ç®¡ç†å¯¾è±¡ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã†ã¡ã€toShow ã«å…¥ã£ã¦ã„ã‚‹ã‚‚ã®ã ã‘ã‚’è¡¨ç¤ºã™ã‚‹</summary>
+    private void ApplyVisible(HashSet<GameObject> toShow)
+    {
+        var all = new HashSet<GameObject>();
+
         if (modules != null)
         {
             foreach (var entry in modules)
             {
-                if (entry == null || entry.root == null) continue;
-
-                registered.Add(entry.moduleId);
-                entry.root.SetActive(required.Contains(entry.moduleId));
+                if (entry != null && entry.root != null) all.Add(entry.root);
+            }
+        }
+        if (stageLayouts != null)
+        {
+            foreach (var layout in stageLayouts)
+            {
+                if (layout == null || layout.roots == null) continue;
+                foreach (var go in layout.roots)
+                {
+                    if (go != null) all.Add(go);
+                }
             }
         }
 
-        // •K—v‚È‚Ì‚É“o˜^‚³‚ê‚Ä‚¢‚È‚¢ƒ‚ƒWƒ…[ƒ‹‚ÍŒx
-        foreach (var id in required)
+        foreach (var go in all)
         {
-            if (id == ModuleId.None) continue;
-            if (!registered.Contains(id))
-            {
-                Debug.LogWarning($"[StageModuleSwitcher] ƒXƒe[ƒW'{stage.stageId}'‚É•K—v‚È{id}‚ªmodules‚É“o˜^‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB");
-            }
-        }
-    }
-
-    private void SetAllActive(bool active)
-    {
-        if (modules == null) return;
-        foreach (var entry in modules)
-        {
-            if (entry != null && entry.root != null)
-            {
-                entry.root.SetActive(active);
-            }
+            bool want = toShow.Contains(go);
+            if (go.activeSelf != want) go.SetActive(want);
         }
     }
 }
