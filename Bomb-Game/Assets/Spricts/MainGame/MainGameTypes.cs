@@ -19,9 +19,10 @@ public enum GameState
 public enum ModuleId
 {
     None = 0,
-    Button,
-    Screw,
-    Wire,
+    Button, //1-1
+    Screw, //1-2
+    Wire, //1-3
+    Timing, //1-4
 }
 
 ///<summary>

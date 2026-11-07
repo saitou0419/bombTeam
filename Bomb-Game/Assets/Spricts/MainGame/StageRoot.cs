@@ -37,6 +37,7 @@ public class StageRoot : MonoBehaviour
         foreach (var m in GetComponentsInChildren<ButtonModule>(true)) m.OnStageStarted(stage);
         foreach (var m in GetComponentsInChildren<ScrewModule>(true)) m.OnStageStarted(stage);
         foreach (var m in GetComponentsInChildren<WireModule>(true)) m.OnStageStarted(stage);
+        foreach (var m in GetComponentsInChildren<TimingModule>(true)) m.OnStageStarted(stage);
     }
 
     /// <summary>この親の中にあるモジュールの種類(確認用)</summary>
@@ -46,6 +47,7 @@ public class StageRoot : MonoBehaviour
         if (GetComponentsInChildren<ButtonModule>(true).Length > 0) set.Add(ModuleId.Button);
         if (GetComponentsInChildren<ScrewModule>(true).Length > 0) set.Add(ModuleId.Screw);
         if (GetComponentsInChildren<WireModule>(true).Length > 0) set.Add(ModuleId.Wire);
+        if (GetComponentsInChildren<TimingModule>(true).Length > 0) set.Add(ModuleId.Timing);
         return set;
     }
 }
