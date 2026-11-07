@@ -153,8 +153,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -426, y: 214}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -770.51526, y: 466.5581}
+  m_SizeDelta: {x: 360.9288, y: 108.6178}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &17472493
 MonoBehaviour:
@@ -425,12 +425,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1942684970}
-  m_Father: {fileID: 1754735199}
+  m_Father: {fileID: 1426152470}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 307, y: 214}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 643.43494, y: 456.92755}
+  m_SizeDelta: {x: 290.6166, y: 101.5087}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &364329497
 MonoBehaviour:
@@ -475,7 +475,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 364329498}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 567649748}
+        m_TargetAssemblyTypeName: StagePanelController, Assembly-CSharp
+        m_MethodName: OpenStagePanel
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &364329498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,6 +526,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 364329495}
   m_CullTransparentMesh: 1
+--- !u!1 &567649747
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 567649749}
+  - component: {fileID: 567649748}
+  m_Layer: 0
+  m_Name: StagePanelSelect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &567649748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567649747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dc9f1527fd07e54897b53f5b12383fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StagePanelController
+  stagePanels:
+  - {fileID: 939847836}
+  - {fileID: 2094873913}
+  - {fileID: 1970732632}
+--- !u!4 &567649749
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567649747}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 554.5026, y: 428.60074, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705127514
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,7 +665,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -686,8 +746,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.51989204}
-  m_AnchoredPosition: {x: -451.14, y: -82.171}
-  m_SizeDelta: {x: 149.7232, y: 307.3889}
+  m_AnchoredPosition: {x: -796, y: -164.24}
+  m_SizeDelta: {x: 270.1971, y: 692.9437}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &789033686
 MonoBehaviour:
@@ -744,7 +804,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &939847837
 RectTransform:
   m_ObjectHideFlags: 0
@@ -777,7 +837,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 0.22141443, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -897,6 +957,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 17472492}
+  - {fileID: 364329496}
+  - {fileID: 1660913817}
+  - {fileID: 1757535101}
   - {fileID: 1754735199}
   - {fileID: 789033685}
   - {fileID: 1986002865}
@@ -939,12 +1002,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2111838121}
-  m_Father: {fileID: 1754735199}
+  m_Father: {fileID: 1426152470}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 307, y: 174}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 643.43494, y: 321.58264}
+  m_SizeDelta: {x: 290.6166, y: 101.5087}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1660913818
 MonoBehaviour:
@@ -989,7 +1052,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1660913819}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 567649748}
+        m_TargetAssemblyTypeName: StagePanelController, Assembly-CSharp
+        m_MethodName: OpenStagePanel
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1660913819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1137,9 +1212,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 364329496}
-  - {fileID: 1660913817}
-  - {fileID: 1757535101}
   - {fileID: 939847837}
   - {fileID: 2094873914}
   - {fileID: 1970732633}
@@ -1147,8 +1219,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.51989204}
-  m_AnchoredPosition: {x: 129, y: -5}
-  m_SizeDelta: {x: 436.6013, y: 461.73}
+  m_AnchoredPosition: {x: 238, y: -10.742}
+  m_SizeDelta: {x: 787.9098, y: 1028.2275}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1754735200
 MonoBehaviour:
@@ -1220,12 +1292,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 705127515}
-  m_Father: {fileID: 1754735199}
+  m_Father: {fileID: 1426152470}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 307, y: 133}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 643.43494, y: 182.85413}
+  m_SizeDelta: {x: 290.6166, y: 101.5087}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1757535102
 MonoBehaviour:
@@ -1270,7 +1342,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1757535103}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 567649748}
+        m_TargetAssemblyTypeName: StagePanelController, Assembly-CSharp
+        m_MethodName: OpenStagePanel
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1757535103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1343,8 +1427,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 217.83533, y: 127.50601}
-  m_SizeDelta: {x: 121.1606, y: -137.5913}
+  m_AnchoredPosition: {x: 385.278, y: 201}
+  m_SizeDelta: {x: 194.8417, y: -157.6862}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1923532659
 MonoBehaviour:
@@ -1475,7 +1559,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1538,7 +1622,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1970732633
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1571,7 +1655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 0.97838914, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1724,8 +1808,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 475, y: -226}
-  m_SizeDelta: {x: 112.4271, y: 36.0303}
+  m_AnchoredPosition: {x: 842, y: -486}
+  m_SizeDelta: {x: 202.8909, y: 78.2705}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1986002866
 MonoBehaviour:
@@ -1826,7 +1910,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2094873914
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1859,7 +1943,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0, g: 0.18124533, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1975,7 +2059,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -2028,3 +2112,4 @@ SceneRoots:
   - {fileID: 1972307458}
   - {fileID: 1426152470}
   - {fileID: 1722956033}
+  - {fileID: 567649749}
