@@ -1,8 +1,9 @@
+ï»¿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-/// <summary>ƒlƒW‚Ìí—Ş(ƒhƒ‰ƒCƒo[‚Ìí—Ş‚à“¯‚¶) </summary>
+/// <summary>ãƒã‚¸ã®ç¨®é¡</summary>
 public enum ScrewType
 {
     Plus,
@@ -10,17 +11,20 @@ public enum ScrewType
 }
 
 /// <summary>
-/// ƒlƒWƒ‚ƒWƒ…[ƒ‹“à‚ÌƒlƒWˆêŒÂ
-/// í—Ş‚Ì•ÛE•\¦‚Æ¶ƒNƒŠƒbƒN’·‰Ÿ‚µ‚ÌŒŸoAæ‚èo‚µ‚ğ’S“–
-/// ŠO‚¹‚é‚©‚Ç‚¤‚©‚Ì”»’è‚ÍScrewModule‚É–â‚¢‡‚í‚¹‚é
+/// ãƒã‚¸ä¸€å€‹ã®ã¿
+/// ç¨®é¡ã®ä¿æŒãƒ»è¡¨ç¤ºã€å¤–ã™é †ç•ªã®æ•°å­—ã®è¡¨ç¤ºã€å·¦ã‚¯ãƒªãƒƒã‚¯é•·æŠ¼ã—+ãƒã‚¦ã‚¹ç§»å‹•ã®æ¤œå‡ºã€å–ã‚Šå¤–ã—çŠ¶æ…‹ã‚’æ‹…å½“
+/// å¤–ã›ã‚‹ã‹ã©ã†ã‹ã®åˆ¤å®š(ãƒ‰ãƒ©ã‚¤ãƒãƒ¼ã®ç¨®é¡ãƒ»é †ç•ªãƒ»ã‚²ãƒ¼ãƒ çŠ¶æ…‹)ã¯ ScrewModule ã«å•ã„åˆã‚ã›ã‚‹
 /// </summary>
 public class ModuleScrew : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
-    [Header("‰Šúó‘Ô")]
+    [Header("åˆæœŸçŠ¶æ…‹(ãƒ©ãƒ³ãƒ€ãƒ é…ç½®ãŒã‚ªãƒ•ã®ã¨ãã«ä½¿ã†)")]
     [SerializeField] private ScrewType initialType = ScrewType.Plus;
 
-    [Header("Œ©‚½–Ú‚ğ•Ï‚¦‚é‘ÎÛ")]
+    [Header("è¦‹ãŸç›®ã‚’å¤‰ãˆã‚‹å¯¾è±¡(UIã®Imageãªã©)")]
     [SerializeField] private Graphic targetGraphic;
+
+    [Header("å¤–ã™é †ç•ªã®æ•°å­—(ä»»æ„ã€‚å­ã®TextMeshProã‚’è‡ªå‹•ã§æ¢ã™)")]
+    [SerializeField] private TMP_Text orderLabel;
 
     private ScrewModule owner;
     private bool isPressing;
@@ -31,7 +35,10 @@ public class ModuleScrew : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public bool IsRemoved { get; private set; }
     public ScrewType InitialType => initialType;
 
-    ///<summary>ŠO‚·‘€ì‚Ìi‚İ‹ï‡ ‰‰o—p</summary>
+    /// <summary>å¤–ã™é †ç•ª(åŒã˜ç¨®é¡ã®ä¸­ã§1ã‹ã‚‰) 0ã¯é †ç•ªãªã—</summary>
+    public int Order { get; private set; }
+
+    /// <summary>å¤–ã™æ“ä½œã®é€²ã¿å…·åˆ(0ã€œ1) æ¼”å‡ºã‚’ä»˜ã‘ã‚‹ã¨ãç”¨</summary>
     public float DragProgress01
     {
         get
@@ -44,6 +51,7 @@ public class ModuleScrew : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void Reset()
     {
         targetGraphic = GetComponent<Graphic>();
+        orderLabel = GetComponentInChildren<TMP_Text>(true);
     }
 
     private void OnDisable()
@@ -51,20 +59,22 @@ public class ModuleScrew : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         CancelPress();
     }
 
-    ///<summary>ScrewModule‚©‚çŒÄ‚Î‚ê‚é‰Šú‰»</summary>
+    /// <summary>ScrewModule ã‹ã‚‰å‘¼ã°ã‚Œã‚‹åˆæœŸåŒ–</summary>
     public void Initialize(ScrewModule screwModule)
     {
         owner = screwModule;
+        if (orderLabel == null) orderLabel = GetComponentInChildren<TMP_Text>(true);
     }
 
-    ///<summary>æ‚è•t‚¯’¼‚µ‚Ä‰Šúó‘Ô‚É–ß‚· í—Ş‚ÍinitialType‚É‚È‚é</summary>
+    /// <summary>å–ã‚Šä»˜ã‘ç›´ã—ã¦åˆæœŸçŠ¶æ…‹ã«æˆ»ã™ ç¨®é¡ã¯ initialType ã«ãªã‚Šã€é †ç•ªã¯ãªããªã‚‹</summary>
     public void ResetScrew()
     {
         IsRemoved = false;
         isPressing = false;
         dragProgress = 0f;
-        transform.localRotation = Quaternion.identity;
+        ApplyRotation(0f);
         if (targetGraphic != null) targetGraphic.enabled = true;
+        ClearOrder();
         SetType(initialType);
     }
 
@@ -74,16 +84,38 @@ public class ModuleScrew : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         ApplyVisual();
     }
 
-    ///<summary>Œ©‚½–Ú‚Ì”½‰f(‰¼)</summary>
+    /// <summary>å¤–ã™é †ç•ªã‚’è¨­å®šã—ã€æ•°å­—ã‚’è¡¨ç¤ºã™ã‚‹</summary>
+    public void SetOrder(int order)
+    {
+        Order = order;
+        if (orderLabel != null)
+        {
+            orderLabel.text = order.ToString();
+            orderLabel.gameObject.SetActive(order > 0 && !IsRemoved);
+        }
+    }
+
+    /// <summary>é †ç•ªã‚’ãªãã—ã€æ•°å­—ã‚’æ¶ˆã™</summary>
+    public void ClearOrder()
+    {
+        Order = 0;
+        if (orderLabel != null) orderLabel.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// è¦‹ãŸç›®ã®åæ˜ ã€‚ä»Šã¯è‰²ã ã‘
+    /// </summary>
     private void ApplyVisual()
     {
         if (targetGraphic == null || owner == null) return;
         targetGraphic.color = owner.GetColor(Type);
     }
 
+    // æ“ä½œ(å·¦ã‚¯ãƒªãƒƒã‚¯ã‚’æŠ¼ã™ â†’ æŠ¼ã—ãŸã¾ã¾å¤–ã™æ–¹å‘ã¸å‹•ã‹ã™)
+
     public void OnPointerDown(PointerEventData eventData)
     {
-        //¶ƒNƒŠƒbƒN‚Ì‚İ
+        // å·¦ã‚¯ãƒªãƒƒã‚¯ã®ã¿
         if (eventData.button != PointerEventData.InputButton.Left) return;
         if (IsRemoved) return;
 
@@ -91,7 +123,8 @@ public class ModuleScrew : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         dragOrigin = eventData.position;
         SetProgress(0f);
 
-        if (owner != null) owner.OnPresseWithWrongDriver(this);
+        // æŠ¼ã—ãŸç¬é–“ã«1å›ã ã‘ã€ãƒ‰ãƒ©ã‚¤ãƒãƒ¼é•ã„ãƒ»é †ç•ªé•ã„ã‚’ScrewModuleã«åˆ¤å®šã—ã¦ã‚‚ã‚‰ã†
+        if (owner != null) owner.OnScrewPressed(this);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -99,7 +132,7 @@ public class ModuleScrew : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (!isPressing || IsRemoved || owner == null) return;
         if (eventData.button != PointerEventData.InputButton.Left) return;
 
-        //ƒhƒ‰ƒCƒo[‚ªˆá‚¤EPlayingˆÈŠO‚Ì‚Æ‚«‚Íi‚ß‚¸A‚»‚ÌˆÊ’u‚©‚ç”‚¦’¼‚·
+        // ãƒ‰ãƒ©ã‚¤ãƒãƒ¼ãŒé•ã†ãƒ»é †ç•ªãŒé•ã†ãƒ»Playingä»¥å¤–ã®ã¨ãã¯é€²ã‚ãšã€ãã®ä½ç½®ã‹ã‚‰æ•°ãˆç›´ã™
         if (!owner.CanRemove(this))
         {
             dragOrigin = eventData.position;
@@ -107,10 +140,10 @@ public class ModuleScrew : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             return;
         }
 
-        //ŠO‚·•ûŒü‚É‚Ç‚ê‚¾‚¯“®‚©‚µ‚½‚©
+        // å¤–ã™æ–¹å‘ã«ã©ã‚Œã ã‘å‹•ã‹ã—ãŸã‹
         float moved = Vector2.Dot(eventData.position - dragOrigin, owner.RemoveDirection);
 
-        //‹t•ûŒü‚É“®‚©‚µ‚½‚Æ‚«‚ÍA‚»‚ÌˆÊ’u‚ğV‚µ‚¢Šî€‚É‚·‚é
+        // é€†æ–¹å‘ã«å‹•ã‹ã—ãŸã¨ãã¯ã€ãã®ä½ç½®ã‚’æ–°ã—ã„åŸºæº–ã«ã™ã‚‹
         if (moved < 0f)
         {
             dragOrigin = eventData.position;
@@ -127,6 +160,7 @@ public class ModuleScrew : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        // é›¢ã—ãŸã‚‰é€²è¡Œã¯ã‚¼ãƒ­ã«æˆ»ã‚‹(ãƒã‚¸ã®å¤–ã§é›¢ã—ãŸå ´åˆã‚‚åŒã˜)
         CancelPress();
     }
 
@@ -136,13 +170,21 @@ public class ModuleScrew : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         SetProgress(0f);
     }
 
-    /// <summary>is—Ê‚ğXV‚µAŒ©‚½–Ú‚Ì‰ñ“]‚É”½‰f‚·‚é</summary>
+    /// <summary>é€²è¡Œé‡ã‚’æ›´æ–°ã—ã€è¦‹ãŸç›®ã®å›è»¢ã«åæ˜ ã™ã‚‹</summary>
     private void SetProgress(float pixels)
     {
         dragProgress = pixels;
 
         float degrees = (owner != null) ? DragProgress01 * owner.VisualRotationDegrees : 0f;
-        transform.localRotation = Quaternion.Euler(0f, 0f, degrees);
+        ApplyRotation(degrees);
+    }
+
+    /// <summary>ãƒã‚¸ã‚’å›ã—ã¦è¦‹ã›ã‚‹ æ•°å­—ã¯èª­ã‚ã‚‹ã‚ˆã†ã«ã€é€†å‘ãã«å›ã—ã¦å‚¾ã‹ãªã„ã‚ˆã†ã«ã™ã‚‹</summary>
+    private void ApplyRotation(float degrees)
+    {
+        Quaternion rot = Quaternion.Euler(0f, 0f, degrees);
+        transform.localRotation = rot;
+        if (orderLabel != null) orderLabel.rectTransform.localRotation = Quaternion.Inverse(rot);
     }
 
     private void Remove()
@@ -150,8 +192,9 @@ public class ModuleScrew : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         IsRemoved = true;
         isPressing = false;
         dragProgress = 0f;
-        transform.localRotation = Quaternion.identity;
-        if (targetGraphic != null) targetGraphic.enabled = false; // ”ñ•\¦‚É‚µ‚Ä‘€ì‚àó‚¯‚È‚­‚·‚é
+        ApplyRotation(0f);
+        ClearOrder(); // å¤–ã—ãŸã‚‰æ•°å­—ã¯æ¶ˆãˆã‚‹
+        if (targetGraphic != null) targetGraphic.enabled = false; // éè¡¨ç¤ºã«ã—ã¦æ“ä½œã‚‚å—ã‘ãªãã™ã‚‹
         owner.OnScrewRemoved(this);
     }
 }
