@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
@@ -19,7 +20,10 @@ public class ButtonModule : MonoBehaviour
     [Tooltip("各ボタンが緑になる確率(0〜1) 仮の値であり正式仕様ではない")]
     [Range(0f, 1f)]
     [SerializeField] private float greenProbability = 0.5f;
-        [Header("ミスの扱い")]
+    
+    [Header("ミスの扱い")]
+    [Tooltip("順番と違う赤いボタンを押したとき、ミスとして数えるか")]
+    [SerializeField] private bool wrongOrderIsMistake = true;
     [Tooltip("緑のボタンをクリックしたとき、ミスとして数えるか(未確定のため初期値はオフ)")]
     [SerializeField] private bool greenClickIsMistake = false;
 
@@ -27,6 +31,7 @@ public class ButtonModule : MonoBehaviour
     public UnityEvent onCleared;
 
     private bool isCleared;
+    private int nextOrder = 1;
 
     private void Reset()
     {
@@ -59,6 +64,7 @@ public class ButtonModule : MonoBehaviour
     public void ResetModule()
     {
         isCleared = false;
+        nextOrder = 1;
 
         if (buttons == null || buttons.Length == 0)
         {
@@ -77,6 +83,8 @@ public class ButtonModule : MonoBehaviour
                 if (b != null) b.ResetButton();
             }
         }
+
+        AssignOrders();
 
         if (CheckAllGreen())
         {
@@ -113,6 +121,32 @@ public class ButtonModule : MonoBehaviour
         return null;
     }
 
+    /// <summary>赤いボタンだけに、1から始まる押す順番をランダムに割り振る</summary>
+    private void AssignOrders()
+    {
+        var reds = new List<ModuleButton>();
+        foreach (var b in buttons)
+        {
+            if (b != null && !b.IsGreen) reds.Add(b);
+        }
+
+        Shuffle(reds);
+
+        for (int i = 0; i < reds.Count; i++)
+        {
+            reds[i].SetOrder(i + 1);
+        }
+    }
+
+    private static void Shuffle<T>(List<T> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            (list[i], list[j]) = (list[j], list[i]);
+        }
+    }
+
     ///<summary>ModuleButtonからクリックを受け取る</summary>
     public void OnButtonClicked(ModuleButton clicked)
     {
@@ -132,8 +166,16 @@ public class ButtonModule : MonoBehaviour
             return;
         }
 
+        // 順番違い:ミスとして数える。ボタンは赤のまま
+        if (clicked.Order != nextOrder)
+        {
+            if (wrongOrderIsMistake) mainGame.NotifyModuleMistake();
+            return;
+        }
+
         clicked.SetState(ButtonColorState.Green);
-        
+        nextOrder++;
+
         if (CheckAllGreen())
         {
             HandleModuleCleared();
