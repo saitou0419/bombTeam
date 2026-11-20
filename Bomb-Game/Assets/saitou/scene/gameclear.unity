@@ -239,6 +239,7 @@ GameObject:
   - component: {fileID: 145200484}
   - component: {fileID: 145200486}
   - component: {fileID: 145200485}
+  - component: {fileID: 145200487}
   m_Layer: 0
   m_Name: 'Text (TMP) '
   m_TagString: Untagged
@@ -409,6 +410,25 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &145200487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145200483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7103d1e3fda9a64c9a29abf3d10c1ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CSVManage
+  rankList:
+  - type: 
+    id: 0
+    stageName: 
+    clearTime: 
+    mistakes: 
+    evaluation: 
 --- !u!1 &297819296
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,6 +520,7 @@ GameObject:
   - component: {fileID: 352678849}
   - component: {fileID: 352678848}
   - component: {fileID: 352678847}
+  - component: {fileID: 352678850}
   m_Layer: 5
   m_Name: retry
   m_TagString: Untagged
@@ -570,7 +591,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 352678848}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 352678850}
+        m_TargetAssemblyTypeName: retry, Assembly-CSharp
+        m_MethodName: retryButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &352678848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -609,6 +642,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 352678845}
   m_CullTransparentMesh: 1
+--- !u!114 &352678850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 352678845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8705a3fcdbb44b14585ffb3a06e8f834, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::retry
+  gameSceneName: MainGame
 --- !u!1 &452825526
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,6 +666,7 @@ GameObject:
   - component: {fileID: 452825527}
   - component: {fileID: 452825529}
   - component: {fileID: 452825528}
+  - component: {fileID: 452825530}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -746,6 +793,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 452825526}
   m_CullTransparentMesh: 1
+--- !u!114 &452825530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 452825526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7103d1e3fda9a64c9a29abf3d10c1ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CSVManage
+  rankList: []
 --- !u!1 &629041909
 GameObject:
   m_ObjectHideFlags: 0
@@ -903,6 +963,7 @@ GameObject:
   - component: {fileID: 749099703}
   - component: {fileID: 749099705}
   - component: {fileID: 749099704}
+  - component: {fileID: 749099706}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -949,7 +1010,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: stagename
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1073,6 +1134,19 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &749099706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749099702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe3fd3fac2d80904cb4371dcda1299da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResultStageName
+  stageNameText: {fileID: 749099704}
 --- !u!1 &1001655086
 GameObject:
   m_ObjectHideFlags: 0
