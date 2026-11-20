@@ -62,6 +62,7 @@ public class TimingModule : MonoBehaviour
     private float cooldownTimer;
     private int successCount;
     private bool isCleared;
+    private bool reportToMainGame = true;   // 両面モジュールの一部のときは false になる
 
     private void Awake()
     {
@@ -75,6 +76,14 @@ public class TimingModule : MonoBehaviour
     public void OnStageStarted(StageData stage)
     {
         ResetModule();
+    }
+
+    public bool IsCleared => isCleared;
+
+    /// <summary>クリア時にMainGameへ直接通知するかTwoSidedTimingModuleがfalse にする</summary>
+    public void SetReportToMainGame(bool report)
+    {
+        reportToMainGame = report;
     }
 
     ///<summary>モジュールの状態をリセットし、青い弧の位置を戻す</summary>
@@ -252,6 +261,6 @@ public class TimingModule : MonoBehaviour
     {
         isCleared = true;
         onCleared?.Invoke();
-        mainGame.NotifyModuleCleared(ModuleId.Timing);
+        if (reportToMainGame) mainGame.NotifyModuleCleared(ModuleId.Timing);
     }
 }
