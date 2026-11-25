@@ -4,21 +4,25 @@ using UnityEngine;
 [System.Serializable]
 public class RankData
 {
-    public string type;
+   
     public int id;
+    public string type;
     public string stageName;
     public string clearTime;
     public string mistakes;
     public string evaluation;
+    public string face;
+    public string comment;
 }
-public class CSVManage: MonoBehaviour
+public class CSVManage : MonoBehaviour
 {
     public List<RankData> rankList = new List<RankData>();
-    void Start()
+    private void Awake()
     {
         LoadCSV();
     }
-    void LoadCSV()
+
+    private void LoadCSV()
     {
         // CSVファイルを読み込む
         TextAsset csvFile = Resources.Load<TextAsset>("CSVbom01");
@@ -44,7 +48,7 @@ public class CSVManage: MonoBehaviour
             // カンマで項目を分ける
             string[] values = line.Split(',');
 
-            if (values.Length != 6)
+            if (values.Length != 8)
             {
                 Debug.LogWarning("CSVのデータが正しくありません：" + line);
                 continue;
@@ -52,20 +56,40 @@ public class CSVManage: MonoBehaviour
 
             // 1行分のデータを作る
             RankData data = new RankData();
-
-            data.type = values[0];
-           // data.id = int.Parse(values[1]);
+            if (!int.TryParse(values[0].Trim().Trim('\uFEFF'), out int id))
+            {
+                Debug.LogWarning("IDが数字ではありません：" + values[0]);
+                continue;
+            }
+            data.id = id;
+            data.type = values[1];
             data.stageName = values[2];
             data.clearTime = values[3];
             data.mistakes = values[4];
             data.evaluation = values[5];
+            data.face = values[6];
+            data.comment = values[7];
 
             // リストに追加する
             rankList.Add(data);
 
             // Consoleに表示する
-            Debug.Log(data.stageName + "：" + data.evaluation);
+            Debug.Log(data.stageName + "：" + data.evaluation + "：" + data.face + "：" + data.comment);
         }
     }
+    public List<RankData> GetStageData(string stageName, string type)
+    {
+       List<RankData> result = new List<RankData>();
+       
 
+        foreach (RankData data in rankList)
+        {
+            if (data.stageName == stageName && data.type == type)
+            {
+                result.Add(data);
+            }
+        }
+
+        return result;
+    }
 }

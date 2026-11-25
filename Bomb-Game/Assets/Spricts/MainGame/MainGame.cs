@@ -271,7 +271,9 @@ public class MainGame : MonoBehaviour
             stageId = currentStage != null ? currentStage.stageId : string.Empty,
             isCleared = isCleared,
             remainingTime = remainingTIme,
-            score = currentScore
+            score = currentScore,
+            mistakeCount = this.mistakeCount
+
         };
         hasResult = true;
         ResultHolder.Set(resultData);

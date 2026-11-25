@@ -35,6 +35,8 @@ public struct ResultData
     public bool isCleared;  // true: クリア / false: 失敗
     public float remainingTime; // 残り時間(秒)
     public int score;   // スコア(計算式は未確定)
+    public int mistakeCount;//saitou 追加
+
 }
 
 /// <summary>
