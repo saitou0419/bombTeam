@@ -2449,7 +2449,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e4fd593f8f242374784f9cc4d0beb438, type: 2}
   - {fileID: 11400000, guid: 7c586710786b9534f80ba0ec11c14deb, type: 2}
   - {fileID: 11400000, guid: 4736658ac5d79934a9f728bcff157714, type: 2}
-  autoStageOnPlay: 1
+  autoStageOnPlay: 0
   autoStartStageIndex: 0
   initialScore: 0
   onStageStarted:
