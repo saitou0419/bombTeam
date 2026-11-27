@@ -11,6 +11,8 @@ using UnityEngine.Events;
 
 public class MainGame : MonoBehaviour
 {
+    public static int selectedStageIndex = 0;//選択したステージ番号を保存する
+
     [Header("ステージ設定")]
     [Tooltip("プレイ可能なステージ")]
     [SerializeField] private StageData[] stages;
@@ -64,6 +66,10 @@ public class MainGame : MonoBehaviour
         if (autoStageOnPlay)
         {
             SelectStage(autoStartStageIndex);
+        }
+        else
+        {
+            SelectStage(selectedStageIndex);
         }
     }
 
