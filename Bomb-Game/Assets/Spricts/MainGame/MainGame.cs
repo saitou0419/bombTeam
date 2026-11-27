@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
 /// <summary>
@@ -12,6 +13,7 @@ using UnityEngine.Events;
 public class MainGame : MonoBehaviour
 {
     public static int selectedStageIndex = 0;//選択したステージ番号を保存する
+    public static string retryStageId = "";
 
     [Header("ステージ設定")]
     [Tooltip("プレイ可能なステージ")]
@@ -71,6 +73,7 @@ public class MainGame : MonoBehaviour
         {
             SelectStage(selectedStageIndex);
         }
+        
     }
 
     private void Update()
@@ -257,6 +260,7 @@ public class MainGame : MonoBehaviour
         onStageCleared?.Invoke();
         FinalizeResult(true);
         ShowResult();
+        SceneManager.LoadScene("Result");
     }
 
     private void HandleStageFailure()
@@ -267,6 +271,7 @@ public class MainGame : MonoBehaviour
         onStageFailed?.Invoke();
         FinalizeResult(false);
         ShowResult();
+        SceneManager.LoadScene("Result");
     }
 
     ///<summary>リザルト情報を確定</summary>

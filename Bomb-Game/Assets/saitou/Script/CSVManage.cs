@@ -62,13 +62,13 @@ public class CSVManage : MonoBehaviour
                 continue;
             }
             data.id = id;
-            data.type = values[1];
-            data.stageName = values[2];
-            data.clearTime = values[3];
-            data.mistakes = values[4];
-            data.evaluation = values[5];
-            data.face = values[6];
-            data.comment = values[7];
+            data.type = values[1].Trim();
+            data.stageName = values[2].Trim();
+            data.clearTime = values[3].Trim();
+            data.mistakes = values[4].Trim();
+            data.evaluation = values[5].Trim();
+            data.face = values[6].Trim();
+            data.comment = values[7].Trim();
 
             // リストに追加する
             rankList.Add(data);
@@ -92,4 +92,88 @@ public class CSVManage : MonoBehaviour
 
         return result;
     }
+    // 結果に合うCSVデータを取得する
+    public RankData GetResultData(string stageName, float remainingTime, int mistakeCount)
+    {
+        Debug.Log("検索開始");
+        Debug.Log("ステージ：" + stageName);
+        Debug.Log("残り時間：" + remainingTime);
+        Debug.Log("ミス回数：" + mistakeCount);
+
+        foreach (RankData data in rankList)
+        {
+            if (data.stageName.Trim() != stageName.Trim())
+                continue;
+
+            bool timeMatch = CheckTime(data.clearTime.Trim(), remainingTime);
+            bool mistakeMatch = CheckMistakes(data.mistakes.Trim(), mistakeCount);
+
+            Debug.Log("CSVミス条件：" + data.mistakes);
+            Debug.Log("時間判定：" + timeMatch);
+            Debug.Log("ミス判定：" + mistakeMatch);
+
+            if (timeMatch && mistakeMatch)
+            {
+                Debug.Log("取得成功：" + data.evaluation);
+                return data;
+            }
+        }
+
+        Debug.LogError("一致するCSVデータがありません！");
+        return null;
+    }
+
+
+    // 時間の条件を調べる
+    private bool CheckTime(string condition, float remainingTime)
+    {
+        if (condition == "関係なし")
+        {
+            return true;
+        }
+
+        if (condition == "30秒以内")
+        {
+            return remainingTime > 0 && remainingTime <= 30f;
+        }
+
+        if (condition == "30秒以上")
+        {
+            return remainingTime >= 30f;
+        }
+
+        return false;
+    }
+
+    // ミス回数の条件を調べる
+    private bool CheckMistakes(string condition, int mistakeCount)
+    {
+        if (condition == "関係なし")
+        {
+            return true;
+        }
+
+        if (condition == "0")
+        {
+            return mistakeCount == 0;
+        }
+     
+        if (condition == "1~4")
+        {
+            return mistakeCount >= 1 && mistakeCount <= 4;
+        }
+
+        if (condition == "5")
+        {
+            return mistakeCount == 5;
+        }
+
+        if (condition == "6")
+        {
+            return mistakeCount == 6;
+        }
+
+        return false;
+    }
+
 }
